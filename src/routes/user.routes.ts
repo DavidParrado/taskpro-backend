@@ -16,16 +16,16 @@ import {
 
 const router = Router();
 
-router.get("/users", getAllUsers);
-router.get("/users/:id", validateUserExists, validateErrors, getUser);
-router.post("/users", validateUser, validateErrors, createUser);
+router.get("/", getAllUsers);
+router.get("/:id", validateUserExists, validateErrors, getUser);
+router.post("/", validateUser, validateErrors, createUser);
 router.patch(
-  "/users/:id",
+  "/:id",
   validateUserUpdate,
   validateBody,
   validateErrors,
   updateUser
 );
-router.delete("/users/:id", validateUserExists, validateErrors, deleteUser);
+router.delete("/:id", validateUserExists, validateErrors, deleteUser);
 
 export default router;
