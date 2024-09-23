@@ -1,0 +1,47 @@
+import { Request, Response } from "express";
+import { User } from "../entities/User";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+
+import dotenv from "dotenv";
+
+dotenv.config();
+
+export const register = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  const { name, email, password } = req.body;
+
+  const hashedPassword = bcrypt.hashSync(password, 10);
+  const user = User.create({
+    name,
+    email,
+    password: hashedPassword,
+  });
+  await user.save();
+
+  const token = jwt.sign(
+    { id: user.id, roles: user.roles },
+    process.env.JWT_SECRET || "",
+    { expiresIn: "24h" }
+  );
+
+  return res.json({ ...user, token });
+};
+
+export const login = async (req: Request, res: Response): Promise<Response> => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ where: { email } });
+
+  if (!user || !bcrypt.compareSync(password, user.password)) {
+    return res.status(401).json({ message: "Invalid credentials" });
+  }
+
+  const token = jwt.sign(
+    { id: user.id, roles: user.roles },
+    process.env.JWT_SECRET || "",
+    { expiresIn: "24h" }
+  );
+  return res.json({ ...user, token });
+};

@@ -40,14 +40,21 @@ export const updateUser = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
-  const { id: userId } = req.params;
-  const { id, email, password, role, ...rest } = req.body;
+  const { id } = req.params;
+  const { email, password, role, ...rest } = req.body;
+
   if (password) {
     const hashedPassword = bcrypt.hashSync(password, 10);
     rest.password = hashedPassword;
   }
-  const updatedUser = await User.update(userId, rest);
-  return res.json(updatedUser);
+  try {
+    await User.update(id, rest);
+    const updatedUser = await User.findOneBy({ id });
+    return res.json(updatedUser);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Upss, algo salió mal"});
+  }
 };
 
 // Eliminar a un usuario por ID

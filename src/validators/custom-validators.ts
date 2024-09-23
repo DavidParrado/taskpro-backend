@@ -3,7 +3,7 @@ import { User } from "../entities/User";
 // Verificar si el correo existe
 export const existingEmail = async (email: string) => {
   const existeEmail = await User.findOne({ where: { email } });
-  if (existeEmail) {
+  if (email && existeEmail) {
     throw new Error(`El correo: ${email}, ya está registrado`);
   }
 };
@@ -18,7 +18,7 @@ export const existingUser = async (id: string) => {
 
 // Verificar que la contraseña cumpla las condiciones
 export const validPassword = async (password: string) => {
-  const regex = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+  const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d\W_]{8,}$/;
   if (!regex.test(password)) {
     throw new Error(
       "La contraseña debe tener al menos 8 caracteres, una letra mayúscula y un número"

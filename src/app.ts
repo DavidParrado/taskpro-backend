@@ -2,8 +2,10 @@ import express, { Application } from "express";
 import { json } from "body-parser";
 import morgan from "morgan";
 import cors from "cors";
+
 import userRoutes from "./routes/user.routes";
 import projectRoutes from "./routes/project.routes";
+import authRoutes from "./routes/auth.routes";
 
 const app: Application = express();
 
@@ -12,8 +14,9 @@ app.use(morgan("dev"));
 app.use(cors());
 app.use(json());
 
-// Rutas del servidor
+// Rutas habilitadas
 app.use("/api/users", userRoutes);
 app.use("/api/projects", projectRoutes);
+app.use("/api/auth", authRoutes);
 
 export default app;
