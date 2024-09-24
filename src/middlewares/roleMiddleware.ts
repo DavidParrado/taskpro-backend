@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { User } from "../entities/User";
+import { UserRole } from "../utils/enums";
 
-export const roleMiddleware = (allowedRoles: string[]) => {
+export const roleMiddleware = (allowedRoles: UserRole[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     // Asegúrate de que el usuario esté autenticado y que exista el campo `roles` en el usuario
     const user = req.user as User;

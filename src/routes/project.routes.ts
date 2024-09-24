@@ -5,6 +5,7 @@ import {
   createProject,
   updateProject,
   deleteProject,
+  getTasksByProject,
 } from "../controllers/project.controller";
 import {
   createProjectValidation,
@@ -12,6 +13,7 @@ import {
   updateProjectValidation,
 } from "../validators/project-validators";
 import { validateErrors } from "../middlewares/validate-errors";
+import { authMiddleware } from "../middlewares/authMiddleware";
 
 const router = Router();
 
@@ -29,5 +31,8 @@ router.patch("/:id", updateProjectValidation, validateErrors, updateProject);
 
 // Eliminar un proyecto por ID
 router.delete("/:id", projectExistsValidation, validateErrors, deleteProject);
+
+// Obtener todas las tareas de un proyecto
+router.get("/:id/tasks", projectExistsValidation, authMiddleware, validateErrors, getTasksByProject);
 
 export default router;

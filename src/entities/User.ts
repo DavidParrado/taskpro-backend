@@ -7,6 +7,7 @@ import {
 } from "typeorm";
 import { Project } from "./Project";
 import { UserRole } from "../utils/enums";
+import { Task } from "./Task";
 
 @Entity()
 export class User extends BaseEntity {
@@ -29,4 +30,8 @@ export class User extends BaseEntity {
   // Relación de uno a muchos con Project
   @OneToMany(() => Project, (project) => project.leader)
   projects: Project[];
+
+  // Relación de uno a muchos con Task
+  @OneToMany(() => Task, (task) => task.assignee)
+  tasks: Task[];
 }

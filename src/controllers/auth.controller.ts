@@ -34,6 +34,8 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
   const { email, password } = req.body;
   const user = await User.findOne({ where: { email } });
 
+  console.log({password: user?.password});
+  console.log(bcrypt.compareSync(password, user!.password));
   if (!user || !bcrypt.compareSync(password, user.password)) {
     return res.status(401).json({ message: "Invalid credentials" });
   }
