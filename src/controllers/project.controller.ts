@@ -43,7 +43,7 @@ export const createProject = async (
     startDate,
     endDate,
     status: status || ProjectStatus.IN_PROGRESS,
-    leader: leaderId,
+    owner: leaderId,
   });
 
   await newProject.save();
@@ -65,7 +65,7 @@ export const updateProject = async (
 
   // Asignar un lider si viene en la petición
   if (leaderId) {
-    project.leader = leaderId;
+    project.owner = leaderId;
   }
 
   Project.merge(project, rest);

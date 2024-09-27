@@ -4,10 +4,12 @@ import {
   Column,
   BaseEntity,
   OneToMany,
+  ManyToMany,
 } from "typeorm";
 import { Project } from "./Project";
 import { UserRole } from "../utils/enums";
 import { Task } from "./Task";
+import { Team } from "./Team";
 
 @Entity()
 export class User extends BaseEntity {
@@ -28,10 +30,14 @@ export class User extends BaseEntity {
   roles: UserRole[];
 
   // Relación de uno a muchos con Project
-  @OneToMany(() => Project, (project) => project.leader)
+  @OneToMany(() => Project, (project) => project.owner)
   projects: Project[];
 
   // Relación de uno a muchos con Task
   @OneToMany(() => Task, (task) => task.assignee)
   tasks: Task[];
+
+  // Relación muchos a muchos con Team
+  @ManyToMany(() => Team, (team) => team.members)
+  teams: Team[];
 }

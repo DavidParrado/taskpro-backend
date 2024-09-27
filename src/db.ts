@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { User } from "./entities/User";
 import { Project } from "./entities/Project";
 import { Task } from "./entities/Task";
+import { Team } from "./entities/Team";
 
 dotenv.config();
 
@@ -13,7 +14,7 @@ export const AppDataSource = new DataSource({
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  entities: [User, Project, Task],
+  entities: [User, Project, Task, Team],
   logging: true,
   synchronize: true,
 });

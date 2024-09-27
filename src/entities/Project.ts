@@ -7,10 +7,13 @@ import {
   UpdateDateColumn,
   BaseEntity,
   OneToMany,
+  OneToOne,
+  JoinColumn,
 } from "typeorm";
 import { User } from "./User";
 import { ProjectStatus } from "../utils/enums";
 import { Task } from "./Task";
+import { Team } from "./Team";
 
 @Entity()
 export class Project extends BaseEntity {
@@ -45,9 +48,13 @@ export class Project extends BaseEntity {
 
   // Relación con la entidad User, el líder del proyecto
   @ManyToOne(() => User, (user) => user.projects, { onDelete: "CASCADE" })
-  leader: User;
+  owner: User;
 
   // Relación uno a muchos con Task
   @OneToMany(() => Task, (task) => task.project)
   tasks: Task[];
+
+  @OneToOne(() => Team, { cascade: true })
+  @JoinColumn()
+  team: Team;
 }
