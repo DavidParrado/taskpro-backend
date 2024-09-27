@@ -3,6 +3,9 @@ import { Project } from "../entities/Project";
 import { ProjectStatus } from "../utils/enums";
 import { Task } from "../entities/Task";
 import PDFDocument from "pdfkit";
+import tasks from "../assets/tareas.json";
+import { ListaEnlazadaCircular } from "../utils/listaEnlazadaCircular";
+import { ITarea } from "../interfaces/Tarea";
 
 // Obtener todos los proyectos
 export const getAllProjects = async (
@@ -115,25 +118,38 @@ export const generateTasksPdf = async (req: Request, res: Response) => {
     // Buscar el proyecto con las tareas asociadas
     const project = await Project.findOne({
       where: { id },
-      relations: ["tasks", "tasks.assignee"],
     });
 
     // Crear un nuevo documento PDF
     const doc = new PDFDocument();
 
     // Configurar el encabezado del PDF
-    doc.fontSize(20).text(`Lista de tareas para el proyecto: ${project!.name}`, {
-      align: "center",
-    });
+    doc
+      .fontSize(20)
+      .text(`Lista de tareas para el proyecto: ${project!.name}`, {
+        align: "center",
+      });
     doc.moveDown();
 
+    const tareas: ITarea[] = tasks.map((task: any) => {
+      return {
+        ...task,
+        dueDate: task.dueDate ? new Date(task.dueDate) : null,
+        createdAt: new Date(task.createdAt),
+        updatedAt: new Date(task.updatedAt),
+      };
+    });
+
+    const arregloCircular = new ListaEnlazadaCircular<ITarea>();
+    arregloCircular.transformarArreglo(tareas);
+
     // Iterar sobre las tareas del proyecto
-    project!.tasks.forEach((task: Task) => {
-      const userName = task.assignee ? task.assignee.name : "Sin asignar";
-      doc.fontSize(14).text(`Tarea: ${task.title}`);
+    arregloCircular.recorrer((tarea) => {
+      const userName = tarea.user.name || "Sin asignar";
+      doc.fontSize(14).text(`Tarea: ${tarea.title}`);
       doc.fontSize(12).text(`Asignado a: ${userName}`);
-      doc.fontSize(12).text(`Estado: ${task.status}`);
-      doc.fontSize(12).text(`Descripción: ${task.description}`);
+      doc.fontSize(12).text(`Estado: ${tarea.status}`);
+      doc.fontSize(12).text(`Descripción: ${tarea.description}`);
       doc.moveDown();
     });
 
@@ -147,7 +163,7 @@ export const generateTasksPdf = async (req: Request, res: Response) => {
     // Enviar el PDF generado
     doc.pipe(res);
   } catch (error) {
-    console.error("Error generating PDF:", error);
+    console.error("Error generando pdf:", error);
     return res.status(500).json({ message: "Internal server error" });
   }
 };

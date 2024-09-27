@@ -1,0 +1,80 @@
+[
+  {
+    "id": "a0cb4242-2b14-40bb-bd0d-5215fce7ddcd",
+    "title": "Trabajo matematicas",
+    "description": "Libero numquam laborum quisquam officiis laudantium praesentium. Incidunt non eveniet dolor hic soluta delectus. Quia accusamus alias corporis quibusdam quae maxime voluptate reprehenderit. Cumque in autem. Ad voluptas a voluptatem molestiae iusto.",
+    "status": "Pendiente",
+    "dueDate": null,
+    "createdAt": "2024-09-27T02:12:07.030Z",
+    "updatedAt": "2024-09-27T02:12:07.030Z",
+    "user": {
+      "name": "Jhon doe",
+      "email": "jhondoe@gmail.com"
+    }
+  },
+  {
+    "id": "c6e7df0c-1e03-47b2-b6f8-08890339da3f",
+    "title": "Mapa conceptual acerca de la economia colombiana",
+    "description": "Et dolores enim. Id et aut dicta id. Dolore laboriosam vero omnis officia itaque. Odit doloremque aspernatur fugit quia ut.",
+    "status": "Pendiente",
+    "dueDate": null,
+    "createdAt": "2024-09-27T02:12:10.072Z",
+    "updatedAt": "2024-09-27T02:12:10.072Z",
+    "user": {
+      "name": "Jhon doe",
+      "email": "jhondoe@gmail.com"
+    }
+  },
+  {
+    "id": "8a0035b9-ab58-4487-a6cc-7524048aa76b",
+    "title": "Redactar un ensayo",
+    "description": "Sapiente quo reprehenderit. Omnis placeat et voluptate sed quae. Quibusdam nesciunt sed rerum voluptas atque. Qui voluptatem quam ut hic dolor voluptatem.",
+    "status": "Pendiente",
+    "dueDate": null,
+    "createdAt": "2024-09-27T02:12:11.978Z",
+    "updatedAt": "2024-09-27T02:12:11.978Z",
+    "user": {
+      "name": "Jhon doe",
+      "email": "jhondoe@gmail.com"
+    }
+  },
+  {
+    "id": "cf2ab1ee-bc14-4eed-b91a-f5a16163d817",
+    "title": "Lavar la loza",
+    "description": "Ipsa et voluptas ut porro voluptatem aut a quae. Qui delectus et impedit unde. Ex ad animi nisi. Non et error dolorem sint unde qui ad dolor animi.",
+    "status": "Pendiente",
+    "dueDate": null,
+    "createdAt": "2024-09-27T02:12:14.407Z",
+    "updatedAt": "2024-09-27T02:12:14.407Z",
+    "user": {
+      "name": "Jhon doe",
+      "email": "jhondoe@gmail.com"
+    }
+  },
+  {
+    "id": "ef6201e3-df77-4038-a5d9-fdd60150046d",
+    "title": "Djibouti",
+    "description": "Ut beatae fugiat sint. Cum quo ea quae quia laudantium et. Ea laudantium quo aut est odit adipisci eum iste.",
+    "status": "Pendiente",
+    "dueDate": null,
+    "createdAt": "2024-09-27T02:29:44.095Z",
+    "updatedAt": "2024-09-27T02:29:44.095Z",
+    "user": {
+      "name": "Jhon doe",
+      "email": "jhondoe@gmail.com"
+    }
+  },
+  {
+    "id": "e2b780af-66ea-4294-9989-b0cc8521158f",
+    "title": "Shirt",
+    "description": "Nihil neque beatae provident perferendis sapiente est. Voluptatibus tempora aperiam autem non nam et. Voluptatem eaque quae possimus sint. Voluptates qui dolorem quasi deserunt similique odio velit qui saepe. Eum eum reiciendis.",
+    "status": "Pendiente",
+    "dueDate": null,
+    "createdAt": "2024-09-27T02:29:44.907Z",
+    "updatedAt": "2024-09-27T02:29:44.907Z",
+    "user": {
+      "name": "Jhon doe",
+      "email": "jhondoe@gmail.com"
+    }
+  }
+]
