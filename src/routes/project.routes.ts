@@ -6,6 +6,7 @@ import {
   updateProject,
   deleteProject,
   getTasksByProject,
+  generateTasksPdf,
 } from "../controllers/project.controller";
 import {
   createProjectValidation,
@@ -34,5 +35,8 @@ router.delete("/:id", projectExistsValidation, validateErrors, deleteProject);
 
 // Obtener todas las tareas de un proyecto
 router.get("/:id/tasks", projectExistsValidation, authMiddleware, validateErrors, getTasksByProject);
+
+// Obtener todas las tareas de un proyecto
+router.get("/:id/tasks/pdf", projectExistsValidation, authMiddleware, validateErrors, generateTasksPdf);
 
 export default router;

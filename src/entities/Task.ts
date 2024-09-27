@@ -11,9 +11,9 @@ import { Project } from "./Project";
 import { User } from "./User";
 
 export enum TaskStatus {
-  TODO = "todo",
-  IN_PROGRESS = "in-progress",
-  COMPLETED = "completed",
+  TODO = "Pendiente",
+  IN_PROGRESS = "En progreso",
+  COMPLETED = "Completado",
 }
 
 @Entity()
