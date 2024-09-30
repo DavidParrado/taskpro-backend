@@ -14,6 +14,7 @@ import { User } from "./User";
 import { ProjectStatus } from "../utils/enums";
 import { Task } from "./Task";
 import { Team } from "./Team";
+import { Collaborator } from "./Collaborator";
 
 @Entity()
 export class Project extends BaseEntity {
@@ -57,4 +58,8 @@ export class Project extends BaseEntity {
   @OneToOne(() => Team, { cascade: true })
   @JoinColumn()
   team: Team;
+
+  // Relación uno a muchos con Collaborator
+  @OneToMany(() => Collaborator, (collaborator) => collaborator.project)
+  collaborators: Collaborator[];
 }

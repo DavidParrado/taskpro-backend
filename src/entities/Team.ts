@@ -2,14 +2,15 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  ManyToMany,
   ManyToOne,
   JoinTable,
   BaseEntity,
   OneToOne,
+  OneToMany,
 } from "typeorm";
 import { User } from "./User";
 import { Project } from "./Project";
+import { Collaborator } from "./Collaborator";
 
 @Entity()
 export class Team extends BaseEntity {
@@ -20,9 +21,8 @@ export class Team extends BaseEntity {
   name: string;
 
   // Relación muchos a muchos con usuarios
-  @ManyToMany(() => User, (user) => user.teams)
-  @JoinTable()
-  members: User[];
+  @OneToMany(() => Collaborator, (collaborator) => collaborator.team)
+  collaborators: User[];
 
   // Un equipo pertenece a un solo proyecto
   @OneToOne(() => Project, (project) => project.team)
