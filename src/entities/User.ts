@@ -9,6 +9,7 @@ import { Project } from "./Project";
 import { UserRole } from "../utils/enums";
 import { Task } from "./Task";
 import { Collaborator } from "./Collaborator";
+import { Assignment } from "./Assignment";
 
 @Entity()
 export class User extends BaseEntity {
@@ -39,4 +40,8 @@ export class User extends BaseEntity {
   // Relación uno a muchos con Collaborator
   @OneToMany(() => Collaborator, (collaborator) => collaborator.user)
   collaborations: Collaborator[];
+
+  // Relación con asignaciones
+  @OneToMany(() => Assignment, (assignment) => assignment.user)
+  assignments: Assignment[];
 }

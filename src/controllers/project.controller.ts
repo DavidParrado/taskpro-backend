@@ -5,7 +5,7 @@ import { Task } from "../entities/Task";
 import PDFDocument from "pdfkit";
 import tasks from "../assets/tareas.json";
 import { ListaEnlazadaCircular } from "../utils/listaEnlazadaCircular";
-import { ITarea } from "../interfaces/Tarea";
+import { ITarea } from "../interfaces/tarea";
 
 // Obtener todos los proyectos
 export const getAllProjects = async (

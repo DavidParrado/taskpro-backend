@@ -3,8 +3,8 @@ import { Task } from "./Task";
 
 @Entity()
 export class Tag extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @Column()
   name: string;

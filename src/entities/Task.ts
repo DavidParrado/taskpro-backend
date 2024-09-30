@@ -8,10 +8,12 @@ import {
   BaseEntity,
   ManyToMany,
   JoinTable,
+  OneToMany,
 } from "typeorm";
 import { Project } from "./Project";
 import { User } from "./User";
 import { Tag } from "./Tag";
+import { Assignment } from "./Assignment";
 
 export enum TaskStatus {
   TODO = "Pendiente",
@@ -65,6 +67,10 @@ export class Task extends BaseEntity {
     },
   })
   tags: Tag[];
+
+  // Relación con asignaciones de colaboradores
+  @OneToMany(() => Assignment, (assignment) => assignment.task)
+  assignments: Assignment[];
 
   @CreateDateColumn()
   createdAt: Date;

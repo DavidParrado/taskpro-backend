@@ -5,8 +5,8 @@ import { Team } from "./Team";
 
 @Entity()
 export class Collaborator extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @ManyToOne(() => User, (user) => user.collaborations)
   user: User;
@@ -16,5 +16,4 @@ export class Collaborator extends BaseEntity {
 
   @ManyToOne(() => Team, (team) => team.collaborators)
   team: Team;
-
 }

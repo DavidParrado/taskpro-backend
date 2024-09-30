@@ -34,17 +34,17 @@ export const createTeam = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
-  const { name, leaderId, projectId, membersIds, description } = req.body;
+  const { name, leaderId, projectId, description } = req.body;
 
   const leader = await User.findOneBy({ id: leaderId });
   const project = await Project.findOneBy({ id: projectId });
-  const members = await User.findByIds(membersIds);
+  // todo: Add validators ??
 
   if (!leader || !project) {
     return res.status(400).json({ message: "Leader or Project not found" });
   }
 
-  const newTeam = Team.create({ name, leader, project, members, description });
+  const newTeam = Team.create({ name, leader, project, description });
   await newTeam.save();
   return res.status(201).json(newTeam);
 };
@@ -55,7 +55,7 @@ export const updateTeam = async (
   res: Response
 ): Promise<Response> => {
   const { id } = req.params;
-  const { name, leaderId, membersIds, description } = req.body;
+  const { name, leaderId, description } = req.body;
 
   const team = await Team.findOneBy({ id });
   if (!team) {
@@ -67,10 +67,7 @@ export const updateTeam = async (
     const leader = await User.findOneBy({ id: leaderId });
     if (leader) team.leader = leader;
   }
-  if (membersIds) {
-    const members = await User.findByIds(membersIds);
-    team.members = members;
-  }
+
   if (description) team.description = description;
 
   await team.save();
