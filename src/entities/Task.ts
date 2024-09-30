@@ -6,9 +6,12 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   BaseEntity,
+  ManyToMany,
+  JoinTable,
 } from "typeorm";
 import { Project } from "./Project";
 import { User } from "./User";
+import { Tag } from "./Tag";
 
 export enum TaskStatus {
   TODO = "Pendiente",
@@ -47,6 +50,21 @@ export class Task extends BaseEntity {
   // Relación con la entidad Project
   @ManyToOne(() => Project, (project) => project.tasks, { onDelete: "CASCADE" })
   project: Project;
+
+  // Relación muchos a muchos con Tag
+  @ManyToMany(() => Tag, (tag) => tag.tasks)
+  @JoinTable({
+    name: "task_tags", // Tabla intermedia para la relación muchos a muchos
+    joinColumn: {
+      name: "task_id",
+      referencedColumnName: "id",
+    },
+    inverseJoinColumn: {
+      name: "tag_id",
+      referencedColumnName: "id",
+    },
+  })
+  tags: Tag[];
 
   @CreateDateColumn()
   createdAt: Date;

@@ -4,12 +4,10 @@ import {
   Column,
   BaseEntity,
   OneToMany,
-  ManyToMany,
 } from "typeorm";
 import { Project } from "./Project";
 import { UserRole } from "../utils/enums";
 import { Task } from "./Task";
-import { Team } from "./Team";
 import { Collaborator } from "./Collaborator";
 
 @Entity()
