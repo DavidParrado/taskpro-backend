@@ -14,16 +14,16 @@ export const projectExistsValidation = check("id")
 
 export const createProjectValidation = [
   check("name", "El nombre es requerido").not().isEmpty(),
-  check("leaderId")
+  check("ownerId")
     .not()
     .isEmpty()
     .withMessage("Lider ID es requerido")
     .isUUID()
     .withMessage("Lider ID debe ser un UUID")
-    .custom(async (leaderId) => {
-      const leader = await User.findOneBy({ id: leaderId });
-      if (!leader) {
-        throw new Error(`Lider con ID ${leaderId} no existe`);
+    .custom(async (ownerId) => {
+      const owner = await User.findOneBy({ id: ownerId });
+      if (!owner) {
+        throw new Error(`Lider con ID ${ownerId} no existe`);
       }
     }),
   check("status")

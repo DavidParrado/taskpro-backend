@@ -10,6 +10,7 @@ import taskRoutes from "./routes/task.routes";
 import collaboratorRoutes from "./routes/collaborator.routes";
 import tagRoutes from "./routes/tag.routes";
 import assignmentRoutes from "./routes/assignment.routes";
+import { authMiddleware } from "./middlewares/authMiddleware";
 
 const app: Application = express();
 
@@ -19,12 +20,12 @@ app.use(cors());
 app.use(json());
 
 // Rutas habilitadas
-app.use("/api/users", userRoutes);
-app.use("/api/projects", projectRoutes);
+app.use("/api/users", authMiddleware, userRoutes);
+app.use("/api/projects", authMiddleware, projectRoutes);
 app.use("/api/auth", authRoutes);
-app.use("/api/tasks", taskRoutes);
-app.use("/api/collaborators", collaboratorRoutes);
-app.use("/api/tags", tagRoutes);
-app.use("/api/assignments", assignmentRoutes);
+app.use("/api/tasks", authMiddleware, taskRoutes);
+app.use("/api/collaborators", authMiddleware, collaboratorRoutes);
+app.use("/api/tags", authMiddleware, tagRoutes);
+app.use("/api/assignments", authMiddleware, assignmentRoutes);
 
 export default app;

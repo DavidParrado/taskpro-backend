@@ -37,6 +37,6 @@ router.delete("/:id", projectExistsValidation, validateErrors, deleteProject);
 router.get("/:id/tasks", projectExistsValidation, authMiddleware, validateErrors, getTasksByProject);
 
 // Obtener todas las tareas de un proyecto
-router.get("/:id/tasks/pdf", projectExistsValidation, authMiddleware, validateErrors, generateTasksPdf);
+router.get("/:id/tasks/pdf", projectExistsValidation, validateErrors, generateTasksPdf);
 
 export default router;

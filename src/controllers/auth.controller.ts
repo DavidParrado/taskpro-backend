@@ -21,13 +21,14 @@ export const register = async (
   });
   await user.save();
 
+  const { password: pass, ...userFiltered } = user;
   const token = jwt.sign(
-    { id: user.id, roles: user.roles },
+    userFiltered,
     process.env.JWT_SECRET || "",
     { expiresIn: "24h" }
   );
 
-  return res.json({ ...user, token });
+  return res.json({ user, token });
 };
 
 export const login = async (req: Request, res: Response): Promise<Response> => {
@@ -40,10 +41,9 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
     return res.status(401).json({ message: "Invalid credentials" });
   }
 
-  const token = jwt.sign(
-    { id: user.id, roles: user.roles },
-    process.env.JWT_SECRET || "",
-    { expiresIn: "24h" }
-  );
-  return res.json({ ...user, token });
+  const { password: pass, ...userFiltered } = user;
+  const token = jwt.sign(userFiltered, process.env.JWT_SECRET || "", {
+    expiresIn: "24h",
+  });
+  return res.json({ user: userFiltered, token });
 };

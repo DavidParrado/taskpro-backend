@@ -15,6 +15,16 @@ export const authMiddleware = async (
     return res.status(401).json({ message: "No autorizado" });
   }
 
+  const decoded = jwt.decode(token) as JwtPayload;
+  console.log(decoded);
+  if (!decoded) {
+    return res.status(401).json({ message: "No autorizado" });
+  }
+
+  if(decoded.exp && Date.now() >= decoded.exp * 1000) {
+    return res.status(401).json({ message: "Token expirado" });
+  }
+
   try {
     const { id } = jwt.verify(
       token,

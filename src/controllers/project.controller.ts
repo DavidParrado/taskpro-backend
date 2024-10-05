@@ -6,13 +6,14 @@ import PDFDocument from "pdfkit";
 import tasks from "../assets/tareas.json";
 import { ListaEnlazadaCircular } from "../utils/listaEnlazadaCircular";
 import { ITarea } from "../interfaces/tarea";
+import { User } from "../entities/User";
 
 // Obtener todos los proyectos
 export const getAllProjects = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
-  const projects = await Project.find({ relations: ["leader"] });
+  const projects = await Project.find({ relations: ["owner"] });
   return res.json(projects);
 };
 
@@ -24,7 +25,7 @@ export const getProject = async (
   const { id } = req.params;
   const project = await Project.findOne({
     where: { id },
-    relations: ["leader"],
+    relations: ["owner"],
   });
 
   if (!project) {
@@ -39,7 +40,7 @@ export const createProject = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
-  const { name, description, startDate, endDate, status, leaderId } = req.body;
+  const { name, description, startDate, endDate, status, owner } = req.body;
 
   const newProject = Project.create({
     name,
@@ -47,7 +48,7 @@ export const createProject = async (
     startDate,
     endDate,
     status: status || ProjectStatus.IN_PROGRESS,
-    owner: leaderId,
+    owner,
   });
 
   await newProject.save();
@@ -60,7 +61,7 @@ export const updateProject = async (
   res: Response
 ): Promise<Response> => {
   const { id } = req.params;
-  const { leaderId, ...rest } = req.body;
+  const { ownerId, ...rest } = req.body;
 
   const project = await Project.findOneBy({ id });
   if (!project) {
@@ -68,8 +69,12 @@ export const updateProject = async (
   }
 
   // Asignar un lider si viene en la petición
-  if (leaderId) {
-    project.owner = leaderId;
+  if (ownerId) {
+    const owner = await User.findOneBy({ id: ownerId });
+    if(!owner) {
+      return res.status(404).json({ message: "Lider no encontrado" });
+    }
+    project.owner = ownerId;
   }
 
   Project.merge(project, rest);
