@@ -14,18 +14,6 @@ export const projectExistsValidation = check("id")
 
 export const createProjectValidation = [
   check("name", "El nombre es requerido").not().isEmpty(),
-  check("ownerId")
-    .not()
-    .isEmpty()
-    .withMessage("Lider ID es requerido")
-    .isUUID()
-    .withMessage("Lider ID debe ser un UUID")
-    .custom(async (ownerId) => {
-      const owner = await User.findOneBy({ id: ownerId });
-      if (!owner) {
-        throw new Error(`Lider con ID ${ownerId} no existe`);
-      }
-    }),
   check("status")
     .isIn([ProjectStatus.IN_PROGRESS, ProjectStatus.COMPLETED])
     .withMessage(

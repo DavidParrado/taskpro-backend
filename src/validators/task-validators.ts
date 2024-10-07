@@ -1,7 +1,7 @@
 import { check } from "express-validator";
 import { Project } from "../entities/Project";
 import { User } from "../entities/User";
-import { Task } from "../entities/Task";
+import { Task, TaskStatus } from "../entities/Task";
 
 export const validateCreateTask = [
   check("title").notEmpty().withMessage("Titulo es requerido"),
@@ -21,6 +21,29 @@ export const validateCreateTask = [
       if (!user) {
         throw new Error("Asignatario no existe");
       }
+    }),
+  check("status")
+    .optional()
+    .isIn(Object.values(TaskStatus))
+    .withMessage("Estado invalido"),
+  check("dueDate").isDate().withMessage("Fecha invalida").optional(),
+  check("tagIds")
+    .optional()
+    .isArray()
+    .withMessage("Las etiquetas deben ser un arreglo de IDs")
+    .custom((tagIds) => {
+      if (
+        tagIds &&
+        tagIds.some(
+          (id: any) =>
+            !id.match(
+              /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/
+            )
+        )
+      ) {
+        throw new Error("Los IDs de las etiquetas deben ser UUIDs");
+      }
+      return true;
     }),
 ];
 

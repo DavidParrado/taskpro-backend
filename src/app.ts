@@ -16,7 +16,13 @@ const app: Application = express();
 
 // Middleware
 app.use(morgan("dev"));
-app.use(cors());
+app.use(
+  cors({
+    origin: "*", // Change for production
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE","OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 app.use(json());
 
 // Rutas habilitadas

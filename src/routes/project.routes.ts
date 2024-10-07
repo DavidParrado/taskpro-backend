@@ -7,6 +7,7 @@ import {
   deleteProject,
   getTasksByProject,
   generateTasksPdf,
+  getProjectsByUser,
 } from "../controllers/project.controller";
 import {
   createProjectValidation,
@@ -20,6 +21,9 @@ const router = Router();
 
 // Obtener proyectos
 router.get("/", getAllProjects);
+
+// Obtener proyectos por usuario
+router.get("/user/:userId", getProjectsByUser);
 
 // Obtener proyecto por ID
 router.get("/:id", projectExistsValidation, validateErrors, getProject);

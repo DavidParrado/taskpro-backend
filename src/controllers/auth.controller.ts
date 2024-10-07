@@ -23,7 +23,7 @@ export const register = async (
 
   const { password: pass, ...userFiltered } = user;
   const token = jwt.sign(
-    userFiltered,
+    { user: { ...userFiltered } },
     process.env.JWT_SECRET || "",
     { expiresIn: "24h" }
   );
@@ -35,15 +35,13 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
   const { email, password } = req.body;
   const user = await User.findOne({ where: { email } });
 
-  console.log({password: user?.password});
-  console.log(bcrypt.compareSync(password, user!.password));
   if (!user || !bcrypt.compareSync(password, user.password)) {
     return res.status(401).json({ message: "Invalid credentials" });
   }
 
   const { password: pass, ...userFiltered } = user;
-  const token = jwt.sign(userFiltered, process.env.JWT_SECRET || "", {
+  const token = jwt.sign({ user: userFiltered }, process.env.JWT_SECRET || "", {
     expiresIn: "24h",
   });
-  return res.json({ user: userFiltered, token });
+  return res.json({ user, token });
 };

@@ -16,27 +16,27 @@ export const authMiddleware = async (
   }
 
   const decoded = jwt.decode(token) as JwtPayload;
-  console.log(decoded);
+  console.log({ decoded });
   if (!decoded) {
     return res.status(401).json({ message: "No autorizado" });
   }
 
-  if(decoded.exp && Date.now() >= decoded.exp * 1000) {
+  if (decoded.exp && Date.now() >= decoded.exp * 1000) {
     return res.status(401).json({ message: "Token expirado" });
   }
 
   try {
-    const { id } = jwt.verify(
+    const { user } = jwt.verify(
       token,
       process.env.JWT_SECRET || ""
     ) as JwtPayload;
 
-    const user = await User.findOneBy({ id });
-    if (!user) {
+    const userFound = await User.findOneBy({ id: user.id });
+    if (!userFound) {
       return res.status(401).json({ message: "Usuario no encontrado" });
     }
 
-    req.user = user;
+    req.user = userFound;
 
     next();
   } catch (error) {

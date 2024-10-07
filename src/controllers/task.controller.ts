@@ -2,11 +2,16 @@ import { Request, Response } from "express";
 import { Task } from "../entities/Task";
 import { Project } from "../entities/Project";
 import { User } from "../entities/User";
+import { Tag } from "../entities/Tag";
+import { In } from "typeorm";
 
 // Obtener una tarea por ID
 export const getTask = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const task = await Task.findOneBy({ id });
+  const task = await Task.findOne({
+    where: { id },
+    relations: ["assignee", "tags"],
+  });
   return res.json(task);
 };
 
@@ -15,7 +20,8 @@ export const createTask = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
-  const { title, description, dueDate, assigneeId, projectId } = req.body;
+  const { title, description, dueDate, assigneeId, projectId, tagIds, status } =
+    req.body;
 
   // Verificar que el proyecto existe
   const project = await Project.findOneBy({ id: projectId });
@@ -40,7 +46,14 @@ export const createTask = async (
     dueDate,
     assignee,
     project,
+    status,
   });
+
+  // Si se proporcionan tags, verificar que existen
+  if (tagIds) {
+    const tags = await Tag.findBy({ id: In(tagIds) });
+    newTask.tags = tags;
+  }
 
   await newTask.save();
   return res.status(201).json(newTask);

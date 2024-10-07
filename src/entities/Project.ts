@@ -48,7 +48,7 @@ export class Project extends BaseEntity {
   updatedAt: Date;
 
   // Relación con la entidad User, el líder del proyecto
-  @ManyToOne(() => User, (user) => user.projects, { onDelete: "CASCADE" })
+  @ManyToOne(() => User, (user) => user.projects, { onDelete: "CASCADE", eager: true })
   owner: User;
 
   // Relación uno a muchos con Task

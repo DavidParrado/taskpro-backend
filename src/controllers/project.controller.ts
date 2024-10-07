@@ -17,6 +17,20 @@ export const getAllProjects = async (
   return res.json(projects);
 };
 
+export const getProjectsByUser = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  const { userId } = req.params;
+
+  const projects = await Project.find({
+    where: { owner: { id: userId } },
+    relations: ["owner"],
+  });
+
+  return res.json(projects);
+};
+
 // Obtener proyecto por ID
 export const getProject = async (
   req: Request,
@@ -25,7 +39,7 @@ export const getProject = async (
   const { id } = req.params;
   const project = await Project.findOne({
     where: { id },
-    relations: ["owner"],
+    relations: ["owner","tasks"],
   });
 
   if (!project) {
@@ -42,13 +56,14 @@ export const createProject = async (
 ): Promise<Response> => {
   const { name, description, startDate, endDate, status, owner } = req.body;
 
+  console.log(req.user?.name);
   const newProject = Project.create({
     name,
     description,
     startDate,
     endDate,
     status: status || ProjectStatus.IN_PROGRESS,
-    owner,
+    owner: { id: owner || req.user?.id },
   });
 
   await newProject.save();
@@ -71,7 +86,7 @@ export const updateProject = async (
   // Asignar un lider si viene en la petición
   if (ownerId) {
     const owner = await User.findOneBy({ id: ownerId });
-    if(!owner) {
+    if (!owner) {
       return res.status(404).json({ message: "Lider no encontrado" });
     }
     project.owner = ownerId;
