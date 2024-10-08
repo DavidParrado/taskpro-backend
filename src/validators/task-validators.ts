@@ -55,7 +55,7 @@ export const validateUpdateTask = [
   check("assigneeId")
     .optional()
     .custom(async (assigneeId) => {
-      if(!assigneeId) return;
+      if (!assigneeId) return;
       const user = await User.findOneBy({ id: assigneeId });
       if (!user) {
         throw new Error("Asignatario no existe");
@@ -71,3 +71,9 @@ export const validateTaskExists = check("id")
       throw new Error("Tarea no existe");
     }
   });
+
+export const validateGenerateRandomTasks = [
+  check("quantity").isInt({ min: 1, max: 5 }).withMessage("Cantidad invalida"),
+  check("projectId").isUUID().withMessage("ProjectId debe ser un UUID"),
+  check("topicId").isUUID().withMessage("TopicId debe ser un UUID"),
+];

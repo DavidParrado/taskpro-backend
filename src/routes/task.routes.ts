@@ -9,6 +9,7 @@ import {
 import { authMiddleware } from "../middlewares/authMiddleware";
 import {
   validateCreateTask,
+  validateGenerateRandomTasks,
   validateUpdateTask,
 } from "../validators/task-validators";
 import { validateErrors } from "../middlewares/validate-errors";
@@ -37,6 +38,11 @@ router.patch("/:id/status", validateUpdateTask, validateErrors, updateTask);
 router.delete("/:id", validateTaskExists, validateErrors, deleteTask);
 
 // Generar tareas random
-router.post("/:projectId/generate", generateRandomTasks);
+router.post(
+  "/generate",
+  validateGenerateRandomTasks,
+  validateErrors,
+  generateRandomTasks
+);
 
 export default router;

@@ -6,6 +6,7 @@ import { Tag } from "../entities/Tag";
 import { In } from "typeorm";
 import dotenv from "dotenv";
 import OpenAI from "openai";
+import { Topic } from "../entities/Topic";
 
 dotenv.config();
 
@@ -19,24 +20,27 @@ export const generateRandomTasks = async (
   res: Response
 ): Promise<Response> => {
   try {
-    const { projectId } = req.params;
+    const { topicId, quantity, projectId } = req.body;
     const project = await Project.findOneBy({ id: projectId });
     if (!project) {
       return res.status(404).json({ message: "Proyecto no encontrado" });
     }
 
-    const { topic, taskCount } = req.body;
+    const topic = await Topic.findOneBy({ id: topicId });
+    if (!topic) {
+      return res.status(404).json({ message: "Tema no encontrado" });
+    }
     // This prompt will generate a json with random tasks about the given topic, following a specific format
     const prompt = `
-    Generate a list of ${taskCount} tasks about ${topic} in JSON format. 
+    Generate a list of ${quantity} tasks about ${topic.title} in JSON format. 
     Each task should have the following structure:
 
     {
       "title": "Task 1",
-      "description": "This is the description of task 1 related to ${topic}"
+      "description": "This is the description of task 1 related to ${topic.title}"
     }
 
-    The output should be an array of objects in JSON format.
+    The output should be an array of objects in JSON format. Don't add strings or comments to the output. Just return the array of objects. And don't forget to replace the title and description of each task for random data.
   `;
     const params: OpenAI.Chat.ChatCompletionCreateParams = {
       model: "gpt-3.5-turbo",
@@ -50,15 +54,17 @@ export const generateRandomTasks = async (
 
     const response = await openai.chat.completions.create(params);
 
+    console.log(response.choices[0].message.content);
     const tasks = JSON.parse(response.choices[0].message.content ?? "[]");
     if (!tasks) {
       return res.status(500).json({ message: "Error al generar tareas" });
     }
-    console.log(tasks);
     const newTasks = tasks.map((task: any, i: number) =>
       Task.create({
-        title: task.title ?? "Task",
-        description: task.description ?? `This is the description of task ${i} related to ` + topic,
+        title: task.title ?? `Task - ${topic.title}` + i,
+        description:
+          task.description ??
+          `This is the description of task ${i} related to ` + topic.title,
         project,
       })
     );

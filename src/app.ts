@@ -10,6 +10,7 @@ import taskRoutes from "./routes/task.routes";
 import collaboratorRoutes from "./routes/collaborator.routes";
 import tagRoutes from "./routes/tag.routes";
 import assignmentRoutes from "./routes/assignment.routes";
+import topicRoutes from "./routes/topic.routes";
 import { authMiddleware } from "./middlewares/authMiddleware";
 
 const app: Application = express();
@@ -19,7 +20,7 @@ app.use(morgan("dev"));
 app.use(
   cors({
     origin: "*", // Change for production
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE","OPTIONS"],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
@@ -33,5 +34,6 @@ app.use("/api/tasks", authMiddleware, taskRoutes);
 app.use("/api/collaborators", authMiddleware, collaboratorRoutes);
 app.use("/api/tags", authMiddleware, tagRoutes);
 app.use("/api/assignments", authMiddleware, assignmentRoutes);
+app.use("/api/topics", topicRoutes);
 
 export default app;
