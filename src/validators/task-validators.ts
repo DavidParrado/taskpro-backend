@@ -26,7 +26,7 @@ export const validateCreateTask = [
     .optional()
     .isIn(Object.values(TaskStatus))
     .withMessage("Estado invalido"),
-  check("dueDate").isDate().withMessage("Fecha invalida").optional(),
+  check("dueDate").isISO8601().withMessage("Fecha invalida").optional(),
   check("tagIds")
     .optional()
     .isArray()
@@ -50,11 +50,12 @@ export const validateCreateTask = [
 export const validateUpdateTask = [
   check("status")
     .optional()
-    .isIn(["todo", "in-progress", "completed"])
+    .isIn(Object.values(TaskStatus))
     .withMessage("Estado invalido"),
   check("assigneeId")
     .optional()
     .custom(async (assigneeId) => {
+      if(!assigneeId) return;
       const user = await User.findOneBy({ id: assigneeId });
       if (!user) {
         throw new Error("Asignatario no existe");

@@ -4,6 +4,7 @@ import {
   updateTask,
   deleteTask,
   getTask,
+  generateRandomTasks,
 } from "../controllers/task.controller";
 import { authMiddleware } from "../middlewares/authMiddleware";
 import {
@@ -18,31 +19,24 @@ const router = Router();
 // Obtener una tarea por ID
 router.get("/:id", validateTaskExists, authMiddleware, validateErrors, getTask);
 // Crear una nueva tarea
-router.post(
-  "/",
-  authMiddleware,
-  validateCreateTask,
-  validateErrors,
-  createTask
-);
+router.post("/", validateCreateTask, validateErrors, createTask);
 
 // Actualizar una tarea
 router.patch(
   "/:id",
-  authMiddleware,
   validateTaskExists,
   validateUpdateTask,
   validateErrors,
   updateTask
 );
 
+// Actualizar status de una tarea
+router.patch("/:id/status", validateUpdateTask, validateErrors, updateTask);
+
 // Eliminar una tarea
-router.delete(
-  "/:id",
-  validateTaskExists,
-  validateErrors,
-  authMiddleware,
-  deleteTask
-);
+router.delete("/:id", validateTaskExists, validateErrors, deleteTask);
+
+// Generar tareas random
+router.post("/:projectId/generate", generateRandomTasks);
 
 export default router;

@@ -39,7 +39,7 @@ export const getProject = async (
   const { id } = req.params;
   const project = await Project.findOne({
     where: { id },
-    relations: ["owner","tasks"],
+    relations: ["owner","tasks","tasks.tags"],
   });
 
   if (!project) {
@@ -56,7 +56,6 @@ export const createProject = async (
 ): Promise<Response> => {
   const { name, description, startDate, endDate, status, owner } = req.body;
 
-  console.log(req.user?.name);
   const newProject = Project.create({
     name,
     description,
@@ -70,6 +69,7 @@ export const createProject = async (
   return res.status(201).json(newProject);
 };
 
+// todo: fix not working
 // Actualizar un proyecto por ID
 export const updateProject = async (
   req: Request,
