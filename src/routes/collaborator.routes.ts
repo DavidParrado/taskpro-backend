@@ -1,13 +1,12 @@
-
 import { Router } from "express";
 import {
   addCollaborator,
-  getCollaboratorsByProject,
+  getCollaboratorsByTeam,
 } from "../controllers/collaborator.controller";
 
 const router = Router();
 
 router.post("/add", addCollaborator);
-router.get("/:projectId/collaborators", getCollaboratorsByProject);
+router.get("/team/:teamId", getCollaboratorsByTeam);
 
 export default router;

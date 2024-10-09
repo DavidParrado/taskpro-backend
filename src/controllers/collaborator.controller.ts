@@ -1,29 +1,29 @@
 import { Request, Response } from "express";
 import { Collaborator } from "../entities/Collaborator";
 import { User } from "../entities/User";
-import { Project } from "../entities/Project";
+import { Team } from "../entities/Team";
 
-// Añadir colaborador a un proyecto
+// Añadir colaborador a un equipo
 export const addCollaborator = async (req: Request, res: Response) => {
-  const { userId, projectId } = req.body;
+  const { userId, projectId: teamId } = req.body;
 
   try {
     const user = await User.findOneBy({
       id: userId,
     });
-    const project = await Project.findOneBy({
-      id: projectId,
+    const team = await Team.findOneBy({
+      id: teamId,
     });
 
-    if (!user || !project) {
+    if (!user || !team) {
       return res
         .status(404)
-        .json({ message: "Usuario o proyecto no encontrado" });
+        .json({ message: "Usuario o equipo no encontrado" });
     }
 
     const collaborator = new Collaborator();
     collaborator.user = user;
-    collaborator.project = project;
+    collaborator.team = team;
 
     await Collaborator.save(collaborator);
 
@@ -37,24 +37,21 @@ export const addCollaborator = async (req: Request, res: Response) => {
   }
 };
 
-// Obtener colaboradores de un proyecto
-export const getCollaboratorsByProject = async (
-  req: Request,
-  res: Response
-) => {
-  const { projectId } = req.params;
+// Obtener colaboradores de un equipo
+export const getCollaboratorsByTeam = async (req: Request, res: Response) => {
+  const { teamId } = req.params;
 
   try {
-    const project = await Project.findOne({
-      where: { id: projectId },
+    const team = await Team.findOne({
+      where: { id: teamId },
       relations: ["collaborators", "collaborators.user"],
     });
 
-    if (!project) {
+    if (!team) {
       return res.status(404).json({ message: "Proyecto no encontrado" });
     }
 
-    return res.json({ collaborators: project.collaborators });
+    return res.json({ collaborators: team.collaborators });
   } catch (error) {
     return res
       .status(500)

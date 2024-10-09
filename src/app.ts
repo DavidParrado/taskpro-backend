@@ -11,6 +11,7 @@ import collaboratorRoutes from "./routes/collaborator.routes";
 import tagRoutes from "./routes/tag.routes";
 import assignmentRoutes from "./routes/assignment.routes";
 import topicRoutes from "./routes/topic.routes";
+import teamRoutes from "./routes/team.routes";
 import { authMiddleware } from "./middlewares/authMiddleware";
 
 const app: Application = express();
@@ -35,5 +36,6 @@ app.use("/api/collaborators", authMiddleware, collaboratorRoutes);
 app.use("/api/tags", authMiddleware, tagRoutes);
 app.use("/api/assignments", authMiddleware, assignmentRoutes);
 app.use("/api/topics", topicRoutes);
+app.use('/api/teams', authMiddleware, teamRoutes);
 
 export default app;

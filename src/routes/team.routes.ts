@@ -5,6 +5,8 @@ import {
   createTeam,
   updateTeam,
   deleteTeam,
+  getTeamsByUser,
+  getTeamsByProject,
 } from "../controllers/team.controller";
 import { authMiddleware } from "../middlewares/authMiddleware";
 import { roleMiddleware } from "../middlewares/roleMiddleware";
@@ -18,8 +20,10 @@ router.use(authMiddleware);
 // Rutas para equipos
 router.get("/", getAllTeams);
 router.get("/:id", getTeamById);
-router.post("/", roleMiddleware([UserRole.ADMIN]), createTeam); // Solo admin o project_manager pueden crear equipos
-router.put("/:id", roleMiddleware([UserRole.ADMIN]), updateTeam);
-router.delete("/:id", roleMiddleware([UserRole.ADMIN]), deleteTeam);
+router.post("/", createTeam); // Solo admin o project_manager pueden crear equipos
+router.patch("/:id", updateTeam);
+router.delete("/:id", deleteTeam);
+router.get("/user/:userId", getTeamsByUser);
+router.get("/project/:projectId", getTeamsByProject);
 
 export default router;

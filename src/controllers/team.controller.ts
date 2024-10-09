@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import { Team } from "../entities/Team";
 import { User } from "../entities/User";
 import { Project } from "../entities/Project";
+import { In } from "typeorm";
+import { Collaborator } from "../entities/Collaborator";
 
 // Obtener todos los equipos
 export const getAllTeams = async (
@@ -9,7 +11,38 @@ export const getAllTeams = async (
   res: Response
 ): Promise<Response> => {
   const teams = await Team.find({
-    relations: ["members", "leader", "project"],
+    relations: ["collaborators", "leader", "project"],
+  });
+  return res.json(teams);
+};
+
+// Obtener equipos por usuario
+export const getTeamsByUser = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  const { userId } = req.params;
+
+  const user = await User.findOneBy({ id: userId });
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+  const teams = await Team.find({
+    where: { leader: user },
+    relations: ["project", "collaborators", "leader", "collaborators.user"],
+  });
+  return res.json(teams);
+};
+
+// Obtener equipos por proyecto
+export const getTeamsByProject = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  const { projectId } = req.params;
+  const teams = await Team.find({
+    where: { project: { id: projectId } },
+    relations: ["collaborators", "leader", "project"],
   });
   return res.json(teams);
 };
@@ -22,7 +55,7 @@ export const getTeamById = async (
   const { id } = req.params;
   const team = await Team.findOne({
     where: { id },
-    relations: ["members", "leader", "project"],
+    relations: ["collaborators", "leader", "project"],
   });
   return team
     ? res.json(team)
@@ -34,10 +67,12 @@ export const createTeam = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
-  const { name, leaderId, projectId, description } = req.body;
+  const { name, leaderId, projectId, description, collaboratorIds } = req.body;
 
+  console.log(req.body);
   const leader = await User.findOneBy({ id: leaderId });
   const project = await Project.findOneBy({ id: projectId });
+  console.log(leader, project);
   // todo: Add validators ??
 
   if (!leader || !project) {
@@ -46,6 +81,21 @@ export const createTeam = async (
 
   const newTeam = Team.create({ name, leader, project, description });
   await newTeam.save();
+
+  if (collaboratorIds) {
+    const collaboratorsFound = await User.findBy({ id: In(collaboratorIds) });
+    const collaborators = await Promise.all(
+      collaboratorsFound.map((collaborator) => {
+        const newCollaborator = Collaborator.create({
+          user: collaborator,
+          team: newTeam,
+        });
+        return newCollaborator.save();
+      })
+    );
+    return res.status(201).json({ ...newTeam, collaborators });
+  }
+
   return res.status(201).json(newTeam);
 };
 
@@ -71,6 +121,7 @@ export const updateTeam = async (
   if (description) team.description = description;
 
   await team.save();
+  console.log({ team });
   return res.json(team);
 };
 

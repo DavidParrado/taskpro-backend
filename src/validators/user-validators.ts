@@ -21,11 +21,11 @@ export const validateUser = [
 // Validaciones para la actualización de un usuario (con el id)
 export const validateUserUpdate = [
   param("id").isUUID().custom(existingUser), // Validador personalizado para comprobar si el ID del usuario existe
-  body("email")
-    .optional()
-    .isEmail()
-    .withMessage("Debe ser un correo válido")
-    .custom(existingEmail), // Verifica si el correo ya existe (opcional)
+  // body("email")
+  //   .optional()
+  //   .isEmail()
+  //   .withMessage("Debe ser un correo válido")
+  //   .custom(existingEmail), // Verifica si el correo ya existe (opcional)
   body("name")
     .optional()
     .notEmpty()

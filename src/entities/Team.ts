@@ -25,7 +25,7 @@ export class Team extends BaseEntity {
   collaborators: User[];
 
   // Un equipo pertenece a un solo proyecto
-  @OneToOne(() => Project, (project) => project.team)
+  @ManyToOne(() => Project, (project) => project.teams)
   project: Project;
 
   // Definir un líder del equipo

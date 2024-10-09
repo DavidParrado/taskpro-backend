@@ -43,6 +43,14 @@ export const updateUser = async (
   const { id } = req.params;
   const { email, password, role, ...rest } = req.body;
 
+  // validate if email exists
+  const user = await User.findOneBy({
+    email,
+  });
+  if (user && user.id !== id) {
+    return res.status(400).json({ message: "El email ya está en uso" });
+  }
+
   if (password) {
     const hashedPassword = bcrypt.hashSync(password, 10);
     rest.password = hashedPassword;
@@ -53,7 +61,7 @@ export const updateUser = async (
     return res.json(updatedUser);
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Upss, algo salió mal"});
+    return res.status(500).json({ message: "Upss, algo salió mal" });
   }
 };
 

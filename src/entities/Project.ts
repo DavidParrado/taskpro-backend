@@ -55,11 +55,9 @@ export class Project extends BaseEntity {
   @OneToMany(() => Task, (task) => task.project)
   tasks: Task[];
 
-  @OneToOne(() => Team, { cascade: true })
+  // Relación uno a muchos con team
+  @OneToMany(() => Team, (team) => team.project)
   @JoinColumn()
-  team: Team;
+  teams: Team[];
 
-  // Relación uno a muchos con Collaborator
-  @OneToMany(() => Collaborator, (collaborator) => collaborator.project)
-  collaborators: Collaborator[];
 }
