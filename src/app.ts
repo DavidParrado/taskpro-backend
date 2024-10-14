@@ -1,4 +1,4 @@
-import express, { Application } from "express";
+import express, { Application, Request, Response } from "express";
 import { json } from "body-parser";
 import morgan from "morgan";
 import cors from "cors";
@@ -36,6 +36,6 @@ app.use("/api/collaborators", authMiddleware, collaboratorRoutes);
 app.use("/api/tags", authMiddleware, tagRoutes);
 app.use("/api/assignments", authMiddleware, assignmentRoutes);
 app.use("/api/topics", topicRoutes);
-app.use('/api/teams', authMiddleware, teamRoutes);
+app.use("/api/teams", authMiddleware, teamRoutes);
 
 export default app;

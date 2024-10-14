@@ -5,6 +5,7 @@ import {
   deleteTask,
   getTask,
   generateRandomTasks,
+  generatePdf,
 } from "../controllers/task.controller";
 import { authMiddleware } from "../middlewares/authMiddleware";
 import {
@@ -16,6 +17,9 @@ import { validateErrors } from "../middlewares/validate-errors";
 import { validateTaskExists } from "../validators/task-validators";
 
 const router = Router();
+
+// Obtener pdf de tareas
+router.get('/pdf', generatePdf)
 
 // Obtener una tarea por ID
 router.get("/:id", validateTaskExists, authMiddleware, validateErrors, getTask);

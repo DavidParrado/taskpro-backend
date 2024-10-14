@@ -1,12 +1,19 @@
 import { Request, Response } from "express";
-import { Task } from "../entities/Task";
-import { Project } from "../entities/Project";
-import { User } from "../entities/User";
-import { Tag } from "../entities/Tag";
 import { In } from "typeorm";
 import dotenv from "dotenv";
 import OpenAI from "openai";
+import PDFDocument from "pdfkit";
+
+import { Project } from "../entities/Project";
 import { Topic } from "../entities/Topic";
+import { Task } from "../entities/Task";
+import { User } from "../entities/User";
+import { Tag } from "../entities/Tag";
+
+import { ListaEnlazadaCircular } from "../utils/listaEnlazadaCircular";
+import { ITarea } from "../interfaces/tarea";
+
+import tasks from "../assets/tareas.json";
 
 dotenv.config();
 
@@ -208,3 +215,52 @@ export const deleteTask = async (
 
   return res.json({ message: "Tarea eliminada exitosamente" });
 };
+
+// Generar pdf de tareas
+export const generatePdf = async (req: Request, res: Response) => {
+  try {
+    // Crear un nuevo documento PDF
+    const doc = new PDFDocument();
+
+    // Configurar el encabezado del PDF
+    doc.fontSize(20).text(`Lista de tareas para el proyecto`, {
+      align: "center",
+    });
+    doc.moveDown();
+
+    const tareas: ITarea[] = tasks.map((task: any) => {
+      return {
+        ...task,
+        dueDate: task.dueDate ? new Date(task.dueDate) : null,
+        createdAt: new Date(task.createdAt),
+        updatedAt: new Date(task.updatedAt),
+      };
+    });
+
+    const arregloCircular = new ListaEnlazadaCircular<ITarea>();
+    arregloCircular.transformarArreglo(tareas);
+
+    // Iterar sobre las tareas del proyecto
+    arregloCircular.recorrer((tarea) => {
+      const userName = tarea.user.name || "Sin asignar";
+      doc.fontSize(14).text(`Tarea: ${tarea.title}`);
+      doc.fontSize(12).text(`Asignado a: ${userName}`);
+      doc.fontSize(12).text(`Estado: ${tarea.status}`);
+      doc.fontSize(12).text(`Descripción: ${tarea.description}`);
+      doc.moveDown();
+    });
+
+    // Finalizar el PDF
+    doc.end();
+
+    // Configurar la respuesta como un archivo PDF
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", `attachment; filename=tasks.pdf`);
+
+    // Enviar el PDF generado
+    doc.pipe(res);
+  } catch (error) {
+    console.error("Error generando pdf:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+} 
