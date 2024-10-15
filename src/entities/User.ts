@@ -26,7 +26,7 @@ export class User extends BaseEntity {
   password: string;
 
   // Definición del rol como un array de strings
-  @Column("text", { array: true, default: [UserRole.USER] })
+  @Column("text", { array: true, default: '{"user"}' })
   roles: UserRole[];
 
   // Relación de uno a muchos con Project
